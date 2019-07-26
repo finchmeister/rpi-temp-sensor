@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  python:
+    build: .
+    environment:
+      DOCKER: "1"
+
+volumes:
+  influxdb_data:
