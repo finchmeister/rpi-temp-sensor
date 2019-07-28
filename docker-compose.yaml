@@ -1,6 +1,9 @@
 version: '2'
 
 services:
+  python:
+    build: .
+    privileged: true
   grafana:
     image: grafana/grafana
     ports:
