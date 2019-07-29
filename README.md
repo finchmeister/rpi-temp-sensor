@@ -8,37 +8,25 @@ Requirements
 
 ## Rough guide
 
-Set up sensor
+Plug sensor into Rpi
 
-Install docker
+SSH into the pi and install docker
 ```
 
 curl -sSL https://get.docker.com/ | sh
 sudo usermod -aG docker $USER
 ```
 logout and in
-```
-sudo apt-get install docker-compose
-sudo apt-get install python-pip
-sudo pip install influxdb
-```
-Install the Python library to read from the sensor:
-```
-git clone https://github.com/adafruit/Adafruit_Python_DHT.git
-cd Adafruit_Python_DHT
-python setup.py install
-```
 
 Start project:
 ```
 make start
 ```
 
-Set up grafana etc. on 192.168.0.23:3000.
+Set up grafana dashboard etc. on 192.168.0.23:3000.
 
 ## Todo:
-- [ ] Dockerise python script https://github.com/farshidtz/Adafruit_Python_DHT_Docker https://hub.docker.com/r/arm32v6/python/
-- [ ] 
+- [x] Dockerise python script https://github.com/farshidtz/Adafruit_Python_DHT_Docker https://hub.docker.com/r/arm32v6/python/
 
 ## Sources:
 - https://github.com/adafruit/Adafruit_Python_DHT
