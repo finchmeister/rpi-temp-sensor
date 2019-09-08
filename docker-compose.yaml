@@ -1,15 +1,9 @@
 version: '2'
 
 services:
-  python:
-    build: .
-    privileged: true
-  grafana:
-    image: grafana/grafana
-    ports:
-    - "3000:3000"
   influxdb:
     image: influxdb
+    restart: always
     environment:
       INFLUXDB_DB: "sensor_data"
       INFLUXDB_USER: "rpi"
@@ -17,7 +11,25 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb
     ports:
-    - "8086:8086"
+      - "8086:8086"
+  grafana:
+    image: grafana/grafana
+    restart: always
+    depends_on:
+      - influxdb
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    ports:
+      - "3000:3000"
+  python:
+    build: .
+    privileged: true
+    environment:
+      INTERVAL: 180
+    restart: always
+    depends_on:
+      - grafana
 
 volumes:
   influxdb_data:
+  grafana-storage:

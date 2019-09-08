@@ -6,7 +6,13 @@ WORKDIR /app
 RUN pip install influxdb
 RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
 	cd Adafruit_Python_DHT && \
-	python3 setup.py install
+	python3 setup.py install && \
+	cd ..
+
+#RUN git clone https://github.com/pimylifeup/Adafruit_Python_CharLCD.git && \
+#	cd Adafruit_Python_CharLCD && \
+#	python3 setup.py install  && \
+#	cd ..
 
 COPY temp-logger.py temp-logger.py
 

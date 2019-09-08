@@ -6,5 +6,8 @@ rsync:
 start:
 	docker-compose up -d --build
 
+stop:
+	docker-compose stop
+
 influx:
 	docker-compose exec influxdb influx
