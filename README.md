@@ -36,6 +36,12 @@ Set up grafana sources, import dashboard etc. on 192.168.0.23:3000.
 - Run script outside docker
 
 
+
 https://pimylifeup.com/raspberry-pi-lcd-16x2/
 
+https://www.raspberrypi-spy.co.uk/2012/08/16x2-lcd-module-control-with-backlight-switch/#prettyPhoto
 
+TODO:
+
+- Start LCD script on restart
+- Script for LCD installation
