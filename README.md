@@ -30,18 +30,14 @@ Set up grafana sources, import dashboard etc. on 192.168.0.23:3000.
 - https://www.definit.co.uk/2018/07/monitoring-temperature-and-humidity-with-a-raspberry-pi-3-dht22-sensor-influxdb-and-grafana/
 
 
-## LCD Display
-
-- Install library
-- Run script outside docker
 
 
+Find IP
+```
+$ ping raspberrypi.local
+PING raspberrypi.local (192.168.1.138): 56 data bytes
+```
 
-https://pimylifeup.com/raspberry-pi-lcd-16x2/
+Setup WIFI:
+https://www.electronicshub.org/setup-wifi-raspberry-pi-2-using-usb-dongle/
 
-https://www.raspberrypi-spy.co.uk/2012/08/16x2-lcd-module-control-with-backlight-switch/#prettyPhoto
-
-TODO:
-
-- Start LCD script on restart
-- Script for LCD installation
