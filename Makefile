@@ -1,4 +1,4 @@
-HOST=raspberrypi.local
+HOST=192.168.1.147
 
 rsync:
 	rsync -rv --exclude '.idea' --exclude '.git' --exclude '.env' --exclude 'git' $$(pwd) pi@$(HOST):~/
@@ -19,4 +19,4 @@ influx:
 	docker-compose exec influxdb influx
 
 github-logger:
-	screen -d -m python rpi-temp-sensor/temp-logger-to-gh.py
+	screen -d -m python3 rpi-temp-sensor/temp-logger-to-gh.py

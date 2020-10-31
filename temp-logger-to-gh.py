@@ -15,8 +15,8 @@ sensor_gpio = 4
 try:
     while True:
         humidity, temperature = Adafruit_DHT.read_retry(sensor, sensor_gpio)
-        # humidity = 0.7
-        # temperature = 15
+        humidity = round(humidity, 2)
+        temperature = round(temperature, 2)
         iso = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         print("[%s] Temp: %s, Humidity: %s" % (iso, temperature, humidity))
         data = [
@@ -27,7 +27,7 @@ try:
                 },
                 "time": iso,
                 "fields": {
-                    "temperature" : temperature,
+                    "temperature": temperature,
                     "humidity": humidity
                 }
             }
