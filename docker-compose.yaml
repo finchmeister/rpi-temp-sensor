@@ -21,14 +21,6 @@ services:
       - grafana-storage:/var/lib/grafana
     ports:
       - "3000:3000"
-  python:
-    build: .
-    privileged: true
-    environment:
-      INTERVAL: 180
-    restart: always
-    depends_on:
-      - grafana
 
 volumes:
   influxdb_data:

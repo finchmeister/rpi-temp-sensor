@@ -6,8 +6,11 @@ rsync:
 ssh:
 	ssh pi@$(HOST)
 
-start:
+start-db:
 	docker-compose up -d --build
+
+start:
+	docker-compose -f docker-compose.yaml -f docker-compose-python-script.yaml up -d --build
 
 stop:
 	docker-compose stop
