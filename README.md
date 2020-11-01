@@ -63,3 +63,9 @@ git clone git@github.com:raspberry-commits/bedroom-temperature-api.git
 ```
 screen -d -m python3 rpi-temp-sensor/temp-logger-to-gh.py
 ```
+Or add to /etc/rc.local
+```
+sudo vi /etc/rc.local
+# Add to script
+sudo su - pi -c "screen -dm -S tempsensor python3 /home/pi/rpi-temp-sensor/temp-logger-to-gh.py"
+```
