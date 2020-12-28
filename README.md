@@ -1,71 +1,83 @@
 # Raspberry Pi Home Temperature Monitoring System
 
+- Raspberry Pi temperature sensor logger that pushes data to GitHub
+- Raspberry Pi that fetches data from GitHub and imports it into Influxdb for visualisation with Grafana 
 
-Requirements
+#### Setup Temp Logger from Scratch
 
-- Raspberry Pi
-- DHT22 temperature & humidity sensor
-
-## Rough guide
-
-Hook up sensor to rpi
-
-SSH into the pi and install docker
-```
-
-curl -sSL https://get.docker.com/ | sh
-sudo usermod -aG docker $USER
-```
-logout and in
-
-Start project:
-```
-make start
-```
-
-Set up grafana sources, import dashboard etc. on 192.168.0.23:3000.
-
-### Sources:
-- https://github.com/adafruit/Adafruit_Python_DHT
-- https://www.definit.co.uk/2018/07/monitoring-temperature-and-humidity-with-a-raspberry-pi-3-dht22-sensor-influxdb-and-grafana/
-
-
-
-
-Find IP
-```
-$ ping raspberrypi.local
-PING raspberrypi.local (192.168.1.138): 56 data bytes
-```
-
-Setup WIFI:
-https://www.electronicshub.org/setup-wifi-raspberry-pi-2-using-usb-dongle/
-
-#### Setup temp logger from Scratch
-
-1. Use Raspberry Pi Imager to prepare the SD card
+1. Use [Raspberry Pi Imager](https://www.raspberrypi.org/software/) to prepare the SD card
 2. Add `ssh` file to the sd volume
-3. Configure headless wifi https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
-4. Boot the pi and install Adafruit
+3. Configure headless wifi https://www.raspberrypi.org/documentation/configuration/wireless/headless.md. Add `wpa_supplicant.conf` to root directory.
 ```
-git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
-	cd Adafruit_Python_DHT && \
-	python3 setup.py install && \
-	cd ..
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=GB
+
+network={
+ ssid="<WIFI NAME>"
+ psk="<PASSWORD>"
+}
 ```
-5. Clone the temperature api project 
+4. Copy ssh keys with `ssh-copy-id pi@192.168.1.147`, password `raspberry`.
+5. SSH into Pi and install dependencies
+```
+sudo apt-get update
+sudo apt-get install git screen python3-pip -y
+sudo python3 -m pip install --upgrade pip setuptools wheel
+sudo pip3 install Adafruit_DHT
+```
+6. Clone the temperature sensor project 
+```
+git clone https://github.com/finchmeister/rpi-temp-sensor.git
+```
+7. Copy the ssh keys id_rsa and id_rsa.pub from last pass into ~/.ssh/ and set permission of id_rsa to 600 `sudo chmod 600 ~/.ssh/id_rsa`
+8. Configure git
+```
+git config --global user.email "<EMAIL>"
+git config --global user.name "Raspberry Commits"
+```
+9. Clone the temperature api project via ssh
 ```
 git clone git@github.com:raspberry-commits/bedroom-temperature-api.git
 ```
-6. Copy the ssh keys id_rsa and id_rsa.pub from last pass int ~/.ssh/
-7. Install screen `sudo apt-get install screen`
-8. Start the script in a screen
+10. Test the script. It should take a recording then push the data up to GitHub
 ```
-screen -d -m python3 rpi-temp-sensor/temp-logger-to-gh.py
+python3 rpi-temp-sensor/temp-logger-to-gh.py
 ```
-Or add to /etc/rc.local
+11. Run the script in a screen, add this to `/etc/rc.local` so that it runs on start up.
+
 ```
 sudo vi /etc/rc.local
 # Add to script
 sudo su - pi -c "screen -dm -S tempsensor python3 /home/pi/rpi-temp-sensor/temp-logger-to-gh.py"
 ```
+
+#### Setup InfluxDb and Grafana
+
+1. SSH into the pi and install docker
+```
+
+curl -sSL https://get.docker.com/ | sh
+sudo usermod -aG docker $USER
+```
+
+2. Start Influxdb and Grafana:
+
+```
+make start-db
+```
+
+3. Set up grafana sources, import dashboard etc. on 192.168.1.148:3000.
+
+4. Run the restore db command 
+
+5. Setup the restore db to run as a cron task every minute
+```
+crontab -e
+
+* * * * * /usr/bin/python3 /home/pi/rpi-temp-sensor/recover-git-data/restore_db.py >/dev/null 2>&1
+```
+
+
+### Sources:
+- https://www.definit.co.uk/2018/07/monitoring-temperature-and-humidity-with-a-raspberry-pi-3-dht22-sensor-influxdb-and-grafana/

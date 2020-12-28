@@ -1,7 +1,8 @@
 HOST=192.168.1.147
+HOST2=192.168.1.148
 
 rsync:
-	rsync -rv --exclude '.idea' --exclude '.git' --exclude '.env' --exclude 'git' $$(pwd) pi@$(HOST):~/
+	rsync -rv --exclude '.idea' --exclude '.git' --exclude '.env' --exclude 'git' --exclude 'checkpoint.txt' $$(pwd) pi@$(HOST2):~/
 
 ssh:
 	ssh pi@$(HOST)
@@ -9,7 +10,7 @@ ssh:
 start-db:
 	docker-compose up -d --build
 
-start:
+start-legacy:
 	docker-compose -f docker-compose.yaml -f docker-compose-python-script.yaml up -d --build
 
 stop:
@@ -17,6 +18,3 @@ stop:
 
 influx:
 	docker-compose exec influxdb influx
-
-github-logger:
-	screen -d -m python3 rpi-temp-sensor/temp-logger-to-gh.py
