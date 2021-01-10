@@ -5,7 +5,7 @@
 
 #### Setup Temp Logger from Scratch
 
-1. Use [Raspberry Pi Imager](https://www.raspberrypi.org/software/) to prepare the SD card
+1. Use [Raspberry Pi Imager](https://www.raspberrypi.org/software/) to prepare the SD card with Raspbian Lite
 2. Add `ssh` file to the sd volume
 3. Configure headless wifi https://www.raspberrypi.org/documentation/configuration/wireless/headless.md. Add `wpa_supplicant.conf` to root directory.
 ```
@@ -44,12 +44,12 @@ git clone git@github.com:raspberry-commits/bedroom-temperature-api.git
 ```
 python3 rpi-temp-sensor/temp-logger-to-gh.py
 ```
-11. Run the script in a screen, add this to `/etc/rc.local` so that it runs on start up.
+11. Run the script as a cron every 2 minutes
 
 ```
-sudo vi /etc/rc.local
-# Add to script
-sudo su - pi -c "screen -dm -S tempsensor python3 /home/pi/rpi-temp-sensor/temp-logger-to-gh.py"
+crontab -e
+
+*/2 * * * * /usr/bin/python3 /home/pi/rpi-temp-sensor/temp-logger-to-gh.py >/dev/null 2>&1
 ```
 
 #### Setup InfluxDb and Grafana
