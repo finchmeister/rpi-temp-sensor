@@ -19,6 +19,8 @@ def reached_checkpoint(commit_hash):
 
 
 def save_checkpoint(commit_hash):
+    if commit_hash is None:
+        return
     f = open(checkpoint_path, "w")
     f.write(commit_hash)
     f.close()

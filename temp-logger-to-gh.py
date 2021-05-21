@@ -3,6 +3,17 @@ import json
 import Adafruit_DHT
 import os
 import sys
+import time
+
+
+def log(message):
+    print(prefix_datetime(message))
+
+
+def prefix_datetime(message):
+    iso_now = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    return "[%s] %s" % (iso_now, message)
+
 
 measurement = "rpi-dht22"
 location = "bedroom"
@@ -12,13 +23,13 @@ sensor = Adafruit_DHT.DHT22
 sensor_gpio = 4
 
 humidity, temperature = Adafruit_DHT.read_retry(sensor, sensor_gpio)
-iso = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 if humidity is None or temperature is None:
-    sys.exit("[%s] There was an error fetching the temperature data" % iso)
+    sys.exit(prefix_datetime("There was an error fetching the temperature data. (Humidity: %s, Temperature: %s)" % (humidity, temperature)))
 
 humidity = round(humidity, 2)
 temperature = round(temperature, 2)
-print("[%s] Temp: %s, Humidity: %s" % (iso, temperature, humidity))
+iso = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+log("Temp: %s, Humidity: %s" % (temperature, humidity))
 
 data = [
     {
@@ -38,5 +49,14 @@ f.write(json.dumps(data[0], sort_keys=True, indent=4))
 f.close()
 os.system("cd /home/pi/bedroom-temperature-api && "
           "git add temperature.json "
-          "&& git commit -m '" + iso + "' "
-          "&& git push origin master")
+          "&& git commit -m '" + iso + "' ")
+
+for i in range(3):
+    pushCommandResult = os.system("cd /home/pi/bedroom-temperature-api && git push origin master")
+    if pushCommandResult == 0:
+        break
+    sleep = 3 ** i * 3
+    log("Failed to push to GitHub, sleeping for %s" % sleep)
+    time.sleep(sleep)
+
+

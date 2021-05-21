@@ -22,7 +22,7 @@ network={
 5. SSH into Pi and install dependencies
 ```
 sudo apt-get update
-sudo apt-get install git screen python3-pip -y
+sudo apt-get install git python3-pip -y
 sudo python3 -m pip install --upgrade pip setuptools wheel
 sudo pip3 install Adafruit_DHT
 ```
