@@ -39,7 +39,13 @@ def send_notification_via_pushbullet(title, body):
     )
 
     if resp.status != 200:
-        raise Exception('Something wrong sending notification')
+        response_data = {
+            "status" : resp.status,
+            "data" : resp.data,
+            "headers": resp.headers
+        }
+        print(response_data)
+        raise Exception('Something wrong sending notification: ')
 
     print('Notification sent')
 

@@ -51,6 +51,7 @@ os.system("cd /home/pi/bedroom-temperature-api && "
           "git add temperature.json "
           "&& git commit -m '" + iso + "' ")
 
+pushCommandResult = 0
 for i in range(3):
     pushCommandResult = os.system("cd /home/pi/bedroom-temperature-api && git push origin master")
     if pushCommandResult == 0:
@@ -59,4 +60,9 @@ for i in range(3):
     log("Failed to push to GitHub, sleeping for %s" % sleep)
     time.sleep(sleep)
 
+if pushCommandResult != 0:
+    log("Git repo probably corrupt, re-cloning")
+    os.system("cd /home/pi/bedroom-temperature-api && "
+              "rm -rf bedroom-temperature-api && "
+              "git clone git@github.com:raspberry-commits/bedroom-temperature-api.git")
 

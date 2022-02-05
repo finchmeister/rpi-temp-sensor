@@ -18,7 +18,7 @@ network={
  psk="<PASSWORD>"
 }
 ```
-4. Copy ssh keys with `ssh-copy-id pi@192.168.1.147`, password `raspberry`.
+4. Copy ssh keys with `ssh-copy-id pi@192.168.1.147`, password `raspberry`. Or just copy your local `id_rsa.pub` into `.ssh/authorized_keys` on the pi.
 5. SSH into Pi and install dependencies
 ```
 sudo apt-get update

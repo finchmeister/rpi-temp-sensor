@@ -4,6 +4,9 @@ HOST2=192.168.1.148
 rsync:
 	rsync -rv --exclude '.idea' --exclude '.git' --exclude '.env' --exclude 'git' --exclude 'checkpoint.txt' $$(pwd) pi@$(HOST2):~/
 
+deploy-temp-logger:
+	rsync -rv --exclude '.idea' --exclude '.git' --exclude '.env' --exclude 'git' --exclude 'checkpoint.txt' $$(pwd) pi@$(HOST1):~/
+
 ssh:
 	ssh pi@$(HOST)
 
