@@ -6,8 +6,11 @@
 #### Setup Temp Logger from Scratch
 
 1. Use [Raspberry Pi Imager](https://www.raspberrypi.org/software/) to prepare the SD card with Raspbian Lite
-2. Add `ssh` file to the sd volume
+2. Add `ssh` file to the sd volume: `touch /Volumes/boot/ssh`
 3. Configure headless wifi https://www.raspberrypi.org/documentation/configuration/wireless/headless.md. Add `wpa_supplicant.conf` to root directory.
+```
+vi /Volumes/boot/wpa_supplicant.conf
+```
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1

@@ -4,6 +4,7 @@ import Adafruit_DHT
 import os
 import sys
 import time
+import http.client as httplib
 
 
 def log(message):
@@ -13,6 +14,17 @@ def log(message):
 def prefix_datetime(message):
     iso_now = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     return "[%s] %s" % (iso_now, message)
+
+
+def have_internet():
+    conn = httplib.HTTPSConnection("8.8.8.8", timeout=5)
+    try:
+        conn.request("HEAD", "/")
+        return True
+    except Exception:
+        return False
+    finally:
+        conn.close()
 
 
 measurement = "rpi-dht22"
@@ -51,18 +63,22 @@ os.system("cd /home/pi/bedroom-temperature-api && "
           "git add temperature.json "
           "&& git commit -m '" + iso + "' ")
 
-pushCommandResult = 0
+push_command_result = 0
 for i in range(3):
-    pushCommandResult = os.system("cd /home/pi/bedroom-temperature-api && git push origin master")
-    if pushCommandResult == 0:
-        break
+    push_command_result = os.system("cd /home/pi/bedroom-temperature-api && git push origin master")
+    if push_command_result == 0:
+        sys.exit(0)
     sleep = 3 ** i * 3
     log("Failed to push to GitHub, sleeping for %s" % sleep)
     time.sleep(sleep)
 
-if pushCommandResult != 0:
-    log("Git repo probably corrupt, re-cloning")
-    os.system("cd /home/pi/bedroom-temperature-api && "
-              "rm -rf bedroom-temperature-api && "
-              "git clone git@github.com:raspberry-commits/bedroom-temperature-api.git")
+if not have_internet():
+    log("Internet is down")
+    sys.exit(1)
+else:
+    log("Internet is available")
 
+log("Git repo probably corrupt, re-cloning")
+os.system("cd /home/pi/bedroom-temperature-api && "
+          "rm -rf bedroom-temperature-api && "
+          "git clone git@github.com:raspberry-commits/bedroom-temperature-api.git")
