@@ -27,8 +27,11 @@ def save_checkpoint(commit_hash):
 
 
 def get_checkpoint():
-    f = open(checkpoint_path, "r")
-    return f.read().strip()
+    try:
+        with open(checkpoint_path, "r") as f:
+            return f.read().strip()
+    except IOError:
+        return False
 
 
 def get_data(commit_hash):

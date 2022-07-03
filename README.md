@@ -57,24 +57,41 @@ crontab -e
 
 #### Setup InfluxDb and Grafana
 
-1. SSH into the pi and install docker
+1. SSH into the pi and install git, docker, docker compose and pip
 ```
-
 curl -sSL https://get.docker.com/ | sh
 sudo usermod -aG docker $USER
+sudo apt-get install git docker-compose python3-pip
 ```
 
-2. Start Influxdb and Grafana:
+> Optional: add a login message to identify the PI: `sudo vi /etc/motd`
+
+2. Clone the project and start Influxdb and Grafana:
 
 ```
+git clone https://github.com/finchmeister/rpi-temp-sensor.git
+cd rpi-temp-sensor
 make start-db
 ```
 
-3. Set up grafana sources, import dashboard etc. on 192.168.1.148:3000.
+3. Set up grafana influxdb source and import dashboard on 192.168.0.xxx:3000.
 
-4. Run the restore db command 
+```
+URL: http://influxdb:8086
+Database: sensor_data
+User: rpi
+Password: rpi
+```
 
-5. Setup the restore db to run as a cron task every minute
+4. Fetch the data and run the restore db command
+```
+# from home directory
+git clone https://github.com/raspberry-commits/bedroom-temperature-api.git
+pip3 install influxdb
+/usr/bin/python3 /home/pi/rpi-temp-sensor/recover-git-data/restore_db.py
+```
+
+6. Setup the restore db to run as a cron task every minute
 ```
 crontab -e
 
