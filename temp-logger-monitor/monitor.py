@@ -18,53 +18,21 @@ def get_last_recording():
     return datetime.strptime(data['time'], '%Y-%m-%dT%H:%M:%SZ')
 
 
-def send_notification_via_pushbullet(title, body):
-    """ Sending notification via pushbullet.
-        Args:
-            title (str) : title of text.
-            body (str) : Body of text.
-    """
-    data_send = {"type": "note", "title": title, "body": body}
-
-    access_token = os.getenv("PUSHBULLET_ACCESS_TOKEN", "")
-
-    if access_token == "":
-        raise Exception("PUSHBULLET_ACCESS_TOKEN env not set")
-
-    resp = http.request(
-        "POST",
-        "https://api.pushbullet.com/v2/pushes",
-        body=json.dumps(data_send),
-        headers={'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'}
-    )
-
-    if resp.status != 200:
-        response_data = {
-            "status" : resp.status,
-            "data" : resp.data,
-            "headers": resp.headers
-        }
-        print(response_data)
-        raise Exception('Something wrong sending notification: ')
-
-    print('Notification sent')
-
-
 def monitor():
     last_recording = get_last_recording()
     one_hour_ago = datetime.now() - timedelta(hours=1)
-    three_hours_ago = datetime.now() - timedelta(hours=3)
+    two_hours_ago = datetime.now() - timedelta(hours=2)
     if last_recording > one_hour_ago:
         print("All good")
         return
 
     print("Not good")
-    if three_hours_ago > last_recording:
+    if two_hours_ago > last_recording:
         print("Already alerted")
         return
 
     print("Sending notification")
-    send_notification_via_pushbullet("Temperature Sensor", "It is fucked mate")
+    raise Exception("No recording from temperature sensor")
 
 
 def is_running_in_lambda():

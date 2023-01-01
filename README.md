@@ -2,6 +2,8 @@
 
 - Raspberry Pi temperature sensor logger that pushes data to GitHub
 - Raspberry Pi that fetches data from GitHub and imports it into Influxdb for visualisation with Grafana 
+- AWS Lambda function that monitors the GitHub repo has been updated every hour
+- Alexa Lambda function which returns the current temperature
 
 #### Setup Temp Logger from Scratch
 
@@ -98,6 +100,12 @@ crontab -e
 * * * * * /usr/bin/python3 /home/pi/rpi-temp-sensor/recover-git-data/restore_db.py >/dev/null 2>&1
 ```
 
+### Monitoring Lambda
+
+Invoke function
+```
+aws lambda invoke --function-name temp-sensor-monitor --invocation-type Event --cli-binary-format raw-in-base64-out --payload '{ "key1": "value1" }' /tmp/response.json
+```
 
 ### Sources:
 - https://www.definit.co.uk/2018/07/monitoring-temperature-and-humidity-with-a-raspberry-pi-3-dht22-sensor-influxdb-and-grafana/
